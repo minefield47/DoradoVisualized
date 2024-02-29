@@ -6,7 +6,7 @@
 #' 
 #' @examples 
 #' duplex.duplicates <- duplex.duplicates(duplex.df);
-#' summary.list$duplex.duplicates <- duplex.duplicates(summart.list$duplex);
+#' summary.list$duplex.duplicates <- duplex.duplicates(summary.list$duplex);
 #' @export
 duplex.duplicates <- function(duplex) {
   #duplex = duplex dataframe. 
