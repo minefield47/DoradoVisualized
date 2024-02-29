@@ -11,13 +11,15 @@
 duplex.duplicates <- function(duplex) {
   #duplex = duplex dataframe. 
   if (!is.data.frame(duplex)) { #If either the duplex or simplex parameter given is not a dataframe, return an error. 
-    stop("The duplex and simplex parameter must be a dataframe.")
+    stop("The duplex parameter must be a dataframe.")
     
   } else {
   
     if ("complement_id" %in% colnames(duplex)) {
       #If duplex.parents has already been done on the dataframe, the template and complement ID columns already exist for utilization. 
-      return(duplex[(duplex$complement_id %in% duplex$template_id),])
+      return(duplex[
+        c(which(duplex$template_id %in% duplex$complement_id & duplex$complement_id%in%duplex$template_id), #Find the complements reads also in the template read column
+          which(duplex$template_id %in% duplex$complement_id[which(duplex$template_id %in% duplex$complement_id & duplex$complement_id %in% duplex$template_id)])),]) #Find the templates that are also in the complements (This allows both to be returned instead of just the first match)
       
     } else {
       #If duplex.parents has not been ran, first need to split: 
@@ -27,11 +29,9 @@ duplex.duplicates <- function(duplex) {
       #Find the templates
       template <- sapply(str_split(duplex$read_id, ";"), `[`,2)
       #Find the row indices of reads are found in both complements and templates. 
-      duplicates <- which(complement %in% template)
-      
-      #Print the duplicate rows. 
-      return(duplex[duplicates,])
-      
+      return(duplex[
+        c(which(template %in% complement & complement %in% template),
+          which(template %in% duplex$complement[which(template %in% complement & complement %in% template)])),])
     }
     
     
