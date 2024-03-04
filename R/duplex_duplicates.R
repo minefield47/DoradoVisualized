@@ -8,35 +8,44 @@
 #' duplex.duplicates <- duplex.duplicates(duplex.df);
 #' summary.list$duplex.duplicates <- duplex.duplicates(summary.list$duplex);
 #' @export
-duplex.duplicates <- function(duplex) {
+duplex_duplicates <- function(duplex) {
   #duplex = duplex dataframe. 
-  if (!is.data.frame(duplex)) { #If either the duplex or simplex parameter given is not a dataframe, return an error. 
-    stop("The duplex parameter must be a dataframe.")
-    
-  } else {
+  stopifnot("The duplex parameter must be a dataframe." = is.data.frame(duplex))
   
     if ("complement_id" %in% colnames(duplex)) {
-      #If duplex.parents has already been done on the dataframe, the template and complement ID columns already exist for utilization. 
-      return(duplex[
-        c(which(duplex$template_id %in% duplex$complement_id & duplex$complement_id%in%duplex$template_id), #Find the complements reads also in the template read column
-          which(duplex$template_id %in% duplex$complement_id[which(duplex$template_id %in% duplex$complement_id & duplex$complement_id %in% duplex$template_id)])),]) #Find the templates that are also in the complements (This allows both to be returned instead of just the first match)
+    #Since duplex_parents has already been run...no need to utilize processing time trying to subset the dataframe.   
+      
+      #Find the intersect (those that appear in both) between template id and complement id
+      duplicates <- intersect(duplex$complement_id, duplex$template_id)
+      #return the matches in either the complement id or template id. 
+      return(
+        rbind(
+          duplex[which(duplex$template_id %in% duplicates),], 
+          duplex[which(duplex$complement_id %in% duplicates),]
+        )
+        )
       
     } else {
       #If duplex.parents has not been ran, first need to split: 
       
       #Find the complements
-      complement <- sapply(str_split(duplex$read_id, ";"), `[`,1)
+      complement <- do.call(rbind, strsplit(duplex$read_id, ";"))[1]
       #Find the templates
-      template <- sapply(str_split(duplex$read_id, ";"), `[`,2)
+      template <- do.call(rbind, strsplit(duplex$read_id, ";"))[2]
       #Find the row indices of reads are found in both complements and templates. 
-      return(duplex[
-        c(which(template %in% complement & complement %in% template),
-          which(template %in% duplex$complement[which(template %in% complement & complement %in% template)])),])
+      
+      duplicates <- intersect(complement, template)
+      
+      
+      return(
+        rbind(
+          duplex[which(duplex$template_id %in% duplicates),], 
+          duplex[which(duplex$complement_id %in% duplicates),]
+            )
+          )
+      
     }
-    
-    
-    
-  }
 }
+
 
 

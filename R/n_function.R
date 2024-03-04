@@ -13,7 +13,7 @@
 #' n.function(sequence_length, 90);
 #' n.function(c(5,3,55,24,6,3,1,5,7,9,75,3,2,12,6,45,3,565,57))
 #' @export
-n.function <- function(read.length, percentage=50) {
+n_function <- function(read.length, percentage=50) {
   limit <- (sum(read.length) * (percentage/100)) # y/100 gives a decimal (i.e percent) wanted for the N__.
   read.length <-  sort(read.length, decreasing=T) #Sort by decreasing order.
   #Set variables for this function.

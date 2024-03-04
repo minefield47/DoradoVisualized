@@ -13,10 +13,10 @@
 #' @return Depending upon input, either a list containing three dataframes: (1) Both duplex/simplex reads, (2) only duplex reads, (3) only simplex reads, OR if no duplex data is found, a single dataframe of simplex reads.
 #' 
 #' @examples 
-#' summary.list <- import.dorado.tsv(/Users/user/Dorado/summary.tsv);
-#' summary.list <- import.dorado.tsv(/Users/user/Dorado/summary_directory);
+#' summary.list <- import.dorado.tsv("/Users/user/Dorado/summary.tsv");
+#' summary.list <- import.dorado.tsv("/Users/user/Dorado/summary_directory");
 #' @export
-import.dorado.tsv.simple <- function(file_or_directory)  {
+import_dorado_tsv <- function(file_or_directory)  {
   
     if (dir.exists(file_or_directory)) { #Check if argument is a directory and that a DoradoQCduplex_<file_name> does not exist. If true, lump the directory and execute. 
       all.reads <- do.call("rbind", lapply(list.files(path=file_or_directory, full.names = TRUE),read.delim, header = T, na.strings =c("","NA")))
