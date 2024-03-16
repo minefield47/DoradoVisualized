@@ -4,10 +4,10 @@
 \alias{n_function}
 \title{Contiguity Quality.}
 \usage{
-n_function(read.length, percentage = 50)
+n_function(read.lengths, percentage = 50)
 }
 \arguments{
-\item{read.length}{A vector of the read length of a given dataset.}
+\item{read.lengths}{A vector of the read lengths.}
 
 \item{percentage}{(default = 50) The percentage at which to evaluate.}
 }

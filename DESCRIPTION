@@ -6,3 +6,4 @@ RoxygenNote: 7.3.1
 Encoding: UTF-8
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
+URL: https://minefield47.github.io/DoradoVisualizer/

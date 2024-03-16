@@ -1,0 +1,19 @@
+---
+title: "Dorado_Visualized"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Dorado_Visualized}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(DoradoVisualized)
+```

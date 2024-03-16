@@ -3,4 +3,5 @@
 .RData
 .Ruserdata
 inst/doc
-simple_data.RDatas
+simple_data.RData
+.RDataTmp

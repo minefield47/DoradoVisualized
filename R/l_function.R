@@ -13,7 +13,7 @@
 #' n.function(c(5,3,55,24,6,3,1,5,7,9,75,3,2,12,6,45,3,565,57))
 #' @export
 l_function <- function(read.length,percentage=50){
-  limit <- (sum(read.length) * (percentage/100)) # y/100 gives a decimal (i.e percent) wanted for the N__.
+  limit <- (sum(read.length) * (percentage/100)) # %/100 gives a decimal wanted for the L__.
   read.length <-  sort(read.length, decreasing=T) #Sort by decreasing order.
   #Set variables for this function.
   t <- 0 #Current number of reads added. 
@@ -25,7 +25,7 @@ l_function <- function(read.length,percentage=50){
     z <- z + 1 
   } 
   z <- z-1 #The last call of the while loop will add one to z, so it needs to be removed to get the proper increment
-  return(z) #Return the value in megabases
+  return(z) 
   
   
 }

@@ -1,0 +1,44 @@
+---
+title: "Fastq_Manipulation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Fastq_Manipulation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(DoradoVisualized)
+```
+
+There are two paths a user can opt to when manipulating fastq files (Recommended: [seqTools](https://bioconductor.org/packages/release/bioc/html/seqTools.html)) after analyzing the summary files:
+
+  1. Utilize R exclusively to mutate and write a new fastq file with the necessary reads removed. Doing so prevents the user from switching between two environments (and languages) to analyze and create usable fastq files. For users who are analyzing their data locally (i.e. not on a remote high performance cluster), this path allows the user to analyze and manipulate the data already stored on the local computer that will then be used for assembly or alignment.
+    
+  2. Utilize R for filtering from the tsv file, write a text-file of the read names to keep or remove, and then use Shell/Bash utilities to generate the fastq files for analysis. While this takes the user outside of the R environment and utilizes a different programming language, it is significantly computationally faster. For users utilizing a remote Linux High Performance Cluster, this is the recommended pathway. Doing so prevents having to download BOTH the fastq files and the summary tsv, analyzing and manipulating them, then reupload the fastq files to the remote server. Instead, users can download the summary files, utilize DoradoVisualized to understand their dataset(s), write a textfile containing the reads to be kept or removed, and then utilizing bash scripts to create the final fastq files. 
+
+This vignette serves as a guide to the first option and manipulate a fastq file purely using R. We will be using a single channel of reads generated using the Duplex dna_r10.4.1_e8.2_400bps_sup@v4.3.0 and dna_r10.4.1_e8.2_5khz_stereo@v1.2 models. The data has then been trimmed to remove any primer and adapter sequences. Finally, the reads were exported from the BAM files to fastq using [seqTools](https://bioconductor.org/packages/release/bioc/html/seqTools.html). 
+
+## Read_fastq
+
+```{r}
+fastq <- read_fastq("bp_g3_channel180.fastq")
+```
+
+
+
+
+
+## Write_fastq
+
+```{r}
+write_fastq(fastq, "test.fastq")
+```
+

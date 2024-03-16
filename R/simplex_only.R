@@ -22,11 +22,9 @@ simplex_only <- function(duplex, simplex){
     
   
   } else {
-    #Find the complements/templates
-    values <- unlist(do.call(rbind, strsplit(duplex$read_id, ";")))
-
+    #Find the complements/templates when complement_id/template_id not in the duplex dataframe.
     
-    return(subset(simplex, !(simplex$read_id %in% values)))
+    return(subset(simplex, !(simplex$read_id %in% as.data.frame(do.call(rbind, strsplit(duplex$read_id, ";"))))))
     
     }
 }

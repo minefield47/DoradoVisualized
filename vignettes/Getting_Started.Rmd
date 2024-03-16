@@ -1,0 +1,131 @@
+---
+title: "Getting_Started"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting_Started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+Here is an example workflow for utilization of DoradoVisualized to analyze the summary.tsv(s) of a duplex basecalling run. For this example, we will be using a single channel of reads generated using the Duplex dna_r10.4.1_e8.2_400bps_sup@v4.3.0 and dna_r10.4.1_e8.2_5khz_stereo@v1.2 models. The data has then been trimmed to remove primer and adapter sequences.
+
+## Loading the library:
+Once downloaded, the library can be loaded via the standard `library()` command.
+```{r setup}
+library(DoradoVisualized)
+```
+
+## Import summary file(s)
+```{r import}
+summary <- import_dorado_tsv("bp_g3_channel-180_trimmed.tsv")
+```
+Those that wish to be importing a directory of tsv files can use the same command with the file path: 
+```{r import directory, eval=FALSE}
+summary <- import_dorado_tsv("/path/to/directory/")
+```
+Regardless, the function will produce a list containing 3 dataframes:
+```{r}
+names(summary)
+```
+  All.reads will contain every read within the tsv, duplex reads will contain only the duplex reads, and the all.simplex will contain all simplex reads (including duplex parents). 
+
+## Duplex Parents
+  If we wanted to know more about the reads that generated the duplex reads, we need to use `duplex_parents()`. There are two options: (a) mutate the duplex dataframe to all be within one dataframe, or (b) subset the simplex reads to create a new dataframe without information about the duplex reads. For illustration purposes, here we will be using the latter (mutate = FALSE).
+```{r}
+summary$duplex.parents <- duplex_parents(summary$duplex, summary$all.simplex, mutate = FALSE)
+```
+
+## Duplex Duplicates
+
+Notice that duplex.parents returns a dataframe of 472 columns, while the expected output (The number of duplex reads multiplied by 2 (complement + template)) should 474 reads. 
+```{r}
+data.frame(
+  Dataframe=c("Duplex Parents","Expected Number"),
+  NumberOfReads=c(nrow(summary$duplex.parents), nrow(summary$duplex) * 2))
+```
+  This is not a fluke or miscoding! It turns out due to the heuristic pairing settings of Dorado, there can be reads which are used as both a template for one pair AND the complement of another pair. In this example: the reads "42634814-e85e-4eaa-89c0-50258719b943" and "853ef6d6-2b61-4ee7-8feb-180dc9f37acf" appear twice, hence naming them "duplicates."
+
+```{r}
+#Find the complements:
+complement <- do.call(rbind, strsplit(summary$duplex$read_id, ";"))[,1]
+#Find the templates:
+template <- do.call(rbind, strsplit(summary$duplex$read_id, ";"))[,2]
+#Find the reads that are present in both vectors:
+intersect(complement,template)
+```
+
+To gather more information about the read, we can run the duplex_duplicates on the duplex dataframe: 
+```{r}
+duplicates <- duplex_duplicates(summary$duplex)
+```
+We can see below the differences between these "duplicate" reads:
+```{r}
+duplicates
+```
+  In this usecase, it appears that these three duplex duplicates can actually be strung together: 095881ea-b574-4e1c-9bb6-d59e17a0aa71;42634814-e85e-4eaa-89c0-50258719b943 -> 42634814-e85e-4eaa-89c0-50258719b943;853ef6d6-2b61-4ee7-8feb-180dc9f37acf -> 853ef6d6-2b61-4ee7-8feb-180dc9f37acf;4982908b-7867-4c31-ae46-4e494bb24273. This suggests it might not be necessary to remove these reads from the dataframe. A user could do an alignment of these reads to further explore, but this is beyond the scope of this package. 
+## Duplex Rate and Rolling
+  Dorado will automatically report the duplex rate over the entire run time as a nucleotide rate into the terminal at the end of a run, but this not saved anywhere unless directed into a standard output. We can re-calculate this rate using the `duplex_rate()` command:
+```{r}
+duplex_rate(summary$duplex,summary$all.simplex)
+```
+If we are interested in the duplex rate at a specific time interval, such as after a flow cell flush, we can use `window_duplex_rate()`.
+```{r}
+window_duplex_rate(summary$duplex, summary$all.simplex, 240)
+```
+Finally, if we wanted to explore the rolling average over the entire experiment, we can use `rolling_duplex_rate()`.
+```{r}
+rolling_duplex_rate(summary$duplex, summary$all.simplex)
+```
+For all of these functions, the rate of duplex reads can be calculated using type = "read".
+
+## Duplex Stats, N, and L functions
+  As part of this package, some general bioinformatic tools have been added along with example base R functions to analyze reads:
+```{r}
+#N50
+n_function(summary$all.reads$sequence_length_template)
+#L50
+l_function(summary$all.reads$sequence_length_template)
+
+#N90
+n_function(summary$all.reads$sequence_length_template, 90)
+#L90
+l_function(summary$all.reads$sequence_length_template, 90)
+
+#Longest Read: 
+summary$all.reads$sequence_length_template[which.max(summary$all.reads$sequence_length_template)]
+
+#Shortest Read:
+summary$all.reads$sequence_length_template[which.min(summary$all.reads$sequence_length_template)]
+
+```
+Users that wish to have this data tabulated into dataframe structure can use the command `dorado_table`.
+```{r}
+dorado_table(summary$all.simplex, summary$duplex)
+```
+For users with multiple libraries being analyzed simultaneously, they can first create a list of simplex dataframes and/or a list of duplex dataframes in the same order. Then, users can use the following code:
+```{r eval=FALSE}
+as.data.frame(lapply(simplex.list, dorado_table, duplex = duplex.list))
+```
+
+## Future Steps:
+Users interested in visualizing the data can continue to use DoradoVisualized to generate graphs about their datasets. To explore this option, please see the "DoradoVisualized" vignette.
+A user might wish to manipulate the fastq (We recommend using: [seqTools](https://bioconductor.org/packages/release/bioc/html/seqTools.html) to convert the BAM files to fastq format) for filtering and subsetting There are two paths a user can opt to use:
+
+  1. Utilize R exclusively to mutate and write a new fastq file with the necessary reads removed. Doing so prevents the user from switching between two environments (and languages) to analyze and create usable fastq files. For users who are analyzing their data locally (i.e. not on a remote high performance cluster), this path allows the user to analyze and manipulate the data already stored on the local computer that will then be used for assembly or alignment. To explore this option please see the "Fastq_Manipulation" vignette.
+    
+  2. Utilize R for filtering from the tsv file, write a text-file of the read names to keep or remove, and then use Shell/Bash utilities to generate the fastq files for analysis. While this takes the user outside of the R environment and utilizes a different programming language, it is significantly computationally faster. For users utilizing a remote Linux High Performance Cluster, this is the recommended pathway. Doing so prevents having to download BOTH the fastq files and the summary tsv, analyzing and manipulating them, then reupload the fastq files to the remote server. Instead, users can download the summary files, utilize DoradoVisualized to understand their dataset(s), write a textfile containing the reads to be kept or removed, and then utilizing bash scripts to create the final fastq files. To explore this option please see the "Fastq_Manipulation" vignette.
+  
+  
+```{r}
+
+```
+  
+  

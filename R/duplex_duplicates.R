@@ -18,31 +18,28 @@ duplex_duplicates <- function(duplex) {
       #Find the intersect (those that appear in both) between template id and complement id
       duplicates <- intersect(duplex$complement_id, duplex$template_id)
       #return the matches in either the complement id or template id. 
-      return(
+      return(unique( #Because the rbind returns duplicates that link them together, use unique to not oversaturate duplicates
         rbind(
           duplex[which(duplex$template_id %in% duplicates),], 
           duplex[which(duplex$complement_id %in% duplicates),]
-        )
-        )
-      
+              )
+            )
+          )
     } else {
       #If duplex.parents has not been ran, first need to split: 
       
       #Find the complements
-      complement <- do.call(rbind, strsplit(duplex$read_id, ";"))[1]
-      #Find the templates
-      template <- do.call(rbind, strsplit(duplex$read_id, ";"))[2]
+      str.split <- as.data.frame(do.call(rbind, strsplit(duplex$read_id, ";")))
       #Find the row indices of reads are found in both complements and templates. 
       
-      duplicates <- intersect(complement, template)
+      duplicates <- intersect(str.split$V1, str.split$V2)
       
-      
-      return(
+     return(unique(
         rbind(
-          duplex[which(duplex$template_id %in% duplicates),], 
-          duplex[which(duplex$complement_id %in% duplicates),]
+          duplex[which(str.split$V1 %in% duplicates),], 
+          duplex[which(str.split$V2 %in% duplicates),]
             )
-          )
+          ))
       
     }
 }

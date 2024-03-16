@@ -73,6 +73,9 @@ duplex_parents <- function(duplex, simplex, mutate = TRUE) {
     return(duplex)
   } else {
   #if mutate ain't true...it false.
-    return(as.data.frame(do.call(rbind, strsplit(duplex$read_id, ";"))))
+    
+    return(
+      subset(simplex, (simplex$read_id %in% as.character(do.call(rbind, strsplit(duplex$read_id, ";")))))
+      )
   } 
 }
