@@ -4,7 +4,8 @@
 #' @param simplex A simplex read dataframe.
 #' @param duplex A duplex read dataframe from the same summary as the simplex dataframe. 
 #' @return A subset of the input duplex dataframe in which a read is used as both a template and a complement. Useful for finding false positive duplex reads
-#' 
+#' @import ggplot2
+#' @import ggExtra
 #' @examples 
 #' library2_duplex_table <- dorado_table(simplex.df, duplex.df)
 #' all.libraries.duplex.table <- as.data.frame(lapply(simplex.list, dorado_table))
@@ -28,5 +29,4 @@ qscore_vs_readlength_graph <- function(simplex, histogram = TRUE, colors = c("#e
   }
 }
 
-ggplot(bp.g1.simplex, aes(sequence_length_template, mean_qscore_template)) + geom_point() + theme
   
