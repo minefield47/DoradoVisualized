@@ -4,22 +4,36 @@
 \alias{nanopore_subset}
 \title{Subset __X coverage using Nanopore Reads}
 \usage{
-nanopore_subset(reads, coverage, genome_size_mb)
+nanopore_subset(
+  reads,
+  coverage,
+  genome_size_mb,
+  ID = TRUE,
+  tolerance = 0.05,
+  n_tries_limit = 10
+)
 }
 \arguments{
-\item{reads}{A dataframe containing the column names: read_id and sequence_length_template.}
+\item{reads}{A dataframe or list of dataframes containing the column names: read_id and sequence_length_template.}
 
 \item{coverage}{The desired coverage.}
+
+\item{genome_size_mb}{Estimated genome size in megabases.}
+
+\item{ID}{(Default = TRUE) Return a character vector of readIDs or the index of reads selected, if false.}
+
+\item{tolerance}{(Default = 0.05) How leinient will you allow the algorithm to overshoot the given coverage. The lower the tolerance, the longer this function will take to run.}
+
+\item{n_tries_limit}{(Default = 10) The number of tries the script will take to reach a coverage within the specified tolerance level.}
 }
 \value{
-A subset of the input duplex dataframe in which a read is used as both a template and a complement. Useful for finding false positive duplex reads
+A vector of subset read_ids/indexes whose length is equal to the desired coverage of a given genome.
 }
 \description{
 Subset __X coverage using Nanopore Reads
 }
 \examples{
-library2_duplex_table <- dorado_table(simplex.df, duplex.df)
-all.libraries.duplex.table <- as.data.frame(lapply(simplex.list, dorado_table))
+2x.subset <- nanopore_subset(reads, 2, 1500, TRUE, 10)
 }
 \author{
 Auden Block

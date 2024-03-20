@@ -1,6 +1,6 @@
-Package: DoradoVisualized
+Package: DoradoVisualizer
 Type: Package
-Title: Dorado Visualized: Statistical Visualization and Bioinformatics
+Title: DoradoVisualizer: Statistical Visualization and Bioinformatics for ONT's Dorado Sequencer
 Version: 0.0.1.0
 RoxygenNote: 7.3.1
 Encoding: UTF-8
