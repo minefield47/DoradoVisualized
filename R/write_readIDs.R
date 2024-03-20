@@ -36,9 +36,10 @@ write_readIDs <- function(reads, file_name = "NULL") {
     }
     #Error catching
     stopifnot("The length of file_name must be the same length as reads" = identical(length(reads), length(file_name)))
-    mapply(function(reads, file_name) {write.table(reads, file = file_name, row.names = FALSE, col.names = FALSE, quote = FALSE)}, reads = reads, file = file_name)
+    invisible(mapply(function(reads, file_name) {write.table(reads, file = file_name, row.names = FALSE, col.names = FALSE, quote = FALSE)}, reads = reads, file = file_name))
     
   } else {
+    stopifnot("Dataframe or list input must be provided" = is.data.frame(reads))
     if (is.null(file_name)){
     file_name <- paste0(as.character(reads$run_id[1]),"_readIDs.txt")
     }
