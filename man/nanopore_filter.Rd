@@ -2,20 +2,24 @@
 % Please edit documentation in R/nanopore_filter.R
 \name{nanopore_filter}
 \alias{nanopore_filter}
-\title{Subset __X coverage using Nanopore Reads}
+\title{Nanopore_filter}
 \usage{
-nanopore_filter(reads, min_quality = 1, min_length = 200, remove = FALSE)
+nanopore_filter(reads, min_quality = 1, min_length = 200, IDs = FALSE)
 }
 \arguments{
-\item{reads}{A dataframe containing the column names: read_id and sequence_length_template.}
+\item{reads}{A dataframe containing the column names: sequence_length_template, mean_qscore_template, and (if IDs=TRUE) read_ids.}
 
-\item{coverage}{The desired coverage.}
+\item{min_quality}{(default = 1) Minimum acceptable quality score}
+
+\item{min_length}{(default = 200) Minimum acceptable read length}
+
+\item{IDs}{(default = false) By default, dataframe will be returned with the reads that pass filtering. If TRUE, a vector of read_IDs that passed quality scoring will be returned}
 }
 \value{
-A subset of the input duplex dataframe in which a read is used as both a template and a complement. Useful for finding false positive duplex reads
+A dataframe of reads that pass quality and length filtering, or a character vector of readIDs that pass quality filtering.
 }
 \description{
-Subset __X coverage using Nanopore Reads
+Nanopore_filter
 }
 \examples{
 library2_duplex_table <- dorado_table(simplex.df, duplex.df)

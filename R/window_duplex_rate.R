@@ -5,7 +5,7 @@
 #' 
 #' @param duplex.df A dataframe of duplex reads
 #' @param simplex.df A dataframe of simplex reads
-#' @param interval (Default = 60) The window before and after the timepoint to analyze.
+#' @param interval (Default = 60) The window before and after the timepoint to analyze in minutes.
 #' @param time_point The timepoint at which to analyze in seconds
 #' @param type (Default = "nucleotide") The type of rate to be reported: nucleotide or read.
 #' @return A dataframe of (,1:3) the interval evaluated reported in seconds, minutes, and hours, and (,4) the duplex rate as a decimal during that time interval. 
@@ -39,12 +39,16 @@ window_duplex_rate <- function(duplex, simplex, time_point, interval = 60, type 
   if (type == "nucleotide") {
     return(
       data.frame(
-        interval.seconds = paste(window.min, "-", window.max),
-        interval.minutes = paste(round((window.min/60),3), "-", round((window.max/60),3)),
-        interval.hours = paste(round((window.min/60/60),3), "-", round((window.max/60/60),3)),
-        nucleotide.rate = round((sum(duplex_subset$sequence_length_template) * 2) / sum(simplex_subset$sequence_length_template),5),
-        n.duplex = nrow(duplex_subset),
-        n.simplex = nrow(simplex_subset)
+        point_seconds = time_point,
+        interval_seconds = paste(window.min, "-", window.max),
+        point_minutes = time_point / 60,
+        interval_minutes = paste(round((window.min/60),3), "-", round((window.max/60),3)),
+        point_hours = time_point / 60 / 60,
+        interval_hours = paste(round((window.min/60/60),3), "-", round((window.max/60/60),3)),
+        nucleotide_rate_decimal = round((sum(duplex_subset$sequence_length_template) * 2) / sum(simplex_subset$sequence_length_template),5),
+        nucleotide_rate_percentage = round((sum(duplex_subset$sequence_length_template) * 2) / sum(simplex_subset$sequence_length_template) * 100,5),
+        n_duplex = nrow(duplex_subset),
+        n_simplex = nrow(simplex_subset)
       )
     )
   } else {

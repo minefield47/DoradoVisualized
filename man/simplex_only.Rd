@@ -2,24 +2,23 @@
 % Please edit documentation in R/simplex_only.R
 \name{simplex_only}
 \alias{simplex_only}
-\title{Find the simplex reads from which no duplex read was generated.}
+\title{Simplex_only}
 \usage{
 simplex_only(duplex, simplex)
 }
 \arguments{
-\item{duplex.df}{A dataframe of duplex reads}
+\item{duplex}{A vector or dataframe (containing the column "read_id" or c("complement_id", "template_id")) of duplex reads.}
 
-\item{simplex.df}{A dataframe of simplex reads of which the duplex reads spawned}
+\item{simplex}{A vector or dataframe of simplex reads including from those from which the duplex reads spawned.}
 }
 \value{
-A dataframe of the simplex reads from which NO duplex reads were generated.
+A character vector or subsetted dataframe of simplex reads from which NO duplex reads were generated.
 }
 \description{
-Find the simplex reads from which no duplex read was generated.
+Subset the simplex reads dataframe to contain only reads from which no duplex read was generated.
 }
 \examples{
-simplex.only <- simplex.only(duplex.df, simplex.df);
-summary.list$simplex.only <- simplex.only(summary.list$duplex.df, summary.list$simplex.df);
+simplex_only(summary.list$duplex.df, summary.list$simplex.df)
 }
 \author{
 Auden Block

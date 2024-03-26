@@ -4,7 +4,7 @@
 \alias{read_fastq}
 \title{Import a fastq file into R}
 \usage{
-read_fastq(fastq)
+read_fastq(fastq, TAGS = TRUE)
 }
 \arguments{
 \item{fastq}{The path to the fastq file to be imported.}

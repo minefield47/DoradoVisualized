@@ -4,10 +4,14 @@
 \alias{write_fastq}
 \title{Export the fastq file into R}
 \usage{
-write_fastq(fastq.df, path)
+write_fastq(headers, sequences, qualities, path = "./")
 }
 \arguments{
-\item{fastq.df}{The f}
+\item{headers}{The Headers (with or without the \@ ) to write}
+
+\item{sequences}{The bases from which to write}
+
+\item{qualities}{The qualities}
 }
 \value{
 A fastq file of the fastq dataframe.

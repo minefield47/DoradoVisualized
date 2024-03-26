@@ -1,0 +1,32 @@
+---
+title: "Subsetting_by_coverage"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Subsetting_by_coverage}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+# Introduction
+```{r setup}
+library(DoradoVisualizer)
+```
+# Import a sample dataset:
+
+```{r import}
+summary <- import_dorado_tsv("bp_g3_channel-180_trimmed.tsv")
+```
+
+
+```{r}
+
+```
+

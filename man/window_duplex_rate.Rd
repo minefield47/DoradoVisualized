@@ -15,7 +15,7 @@ window_duplex_rate(
 \arguments{
 \item{time_point}{The timepoint at which to analyze in seconds}
 
-\item{interval}{(Default = 60) The window before and after the timepoint to analyze.}
+\item{interval}{(Default = 60) The window before and after the timepoint to analyze in minutes.}
 
 \item{type}{(Default = "nucleotide") The type of rate to be reported: nucleotide or read.}
 

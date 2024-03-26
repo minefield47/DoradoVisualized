@@ -7,7 +7,9 @@
 nanopore_subset(
   reads,
   coverage,
-  genome_size_mb,
+  genome_size,
+  units = "gb",
+  random = TRUE,
   ID = TRUE,
   tolerance = 0.05,
   n_tries_limit = 10
@@ -18,13 +20,15 @@ nanopore_subset(
 
 \item{coverage}{The desired coverage.}
 
-\item{genome_size_mb}{Estimated genome size in megabases.}
+\item{random}{This parameter only applies when a list of dataframes is given as input. When true, the script pulls randomly, which could bias against libraries with a low number of reads. If false, the script will try to pull uniformly from each element of the list (for instance a library) until no more reads can be pulled from the element. This option is advantageous where all elements have a sum sequence length greater than the desired coverage as small dataframes will always be present in a given coverage.}
 
-\item{ID}{(Default = TRUE) Return a character vector of readIDs or the index of reads selected, if false.}
+\item{ID}{(Default = TRUE) Return a character vector of readIDs or a dataframe of reads selected.}
 
 \item{tolerance}{(Default = 0.05) How leinient will you allow the algorithm to overshoot the given coverage. The lower the tolerance, the longer this function will take to run.}
 
 \item{n_tries_limit}{(Default = 10) The number of tries the script will take to reach a coverage within the specified tolerance level.}
+
+\item{genome_size_mb}{Estimated genome size in megabases.}
 }
 \value{
 A vector of subset read_ids/indexes whose length is equal to the desired coverage of a given genome.

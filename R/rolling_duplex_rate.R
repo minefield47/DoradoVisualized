@@ -26,7 +26,7 @@ rolling_duplex_rate <- function(duplex, simplex, interval = 60, type = "nucleoti
   
   if (type == "nucleotide") {
       seq_nums <- seq(
-        from=simplex$start_time[which.min(simplex$start_time)]+(interval*60), 
+        from=0+(interval*60), 
         to=simplex$start_time[which.max(simplex$start_time)], 
         by = ((interval*60)*2)) 
       #For convenience, users input the interval in minutes, dorado is in seconds, so convert.

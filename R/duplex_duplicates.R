@@ -15,31 +15,14 @@ duplex_duplicates <- function(duplex) {
     if ("complement_id" %in% colnames(duplex)) {
     #Since duplex_parents has already been run...no need to utilize processing time trying to subset the dataframe.   
       
-      #Find the intersect (those that appear in both) between template id and complement id
-      duplicates <- intersect(duplex$complement_id, duplex$template_id)
-      #return the matches in either the complement id or template id. 
-      return(unique( #Because the rbind returns duplicates that link them together, use unique to not oversaturate duplicates
-        rbind(
-          duplex[which(duplex$template_id %in% duplicates),], 
-          duplex[which(duplex$complement_id %in% duplicates),]
-              )
-            )
-          )
+      return(
+          duplex[c(which(duplex$template_id %in% duplex$complement_id),which(duplex$complement_id %in% duplex$template_id)),])
     } else {
-      #If duplex.parents has not been ran, first need to split: 
-      
-      #Find the complements
-      str.split <- as.data.frame(do.call(rbind, strsplit(duplex$read_id, ";")))
-      #Find the row indices of reads are found in both complements and templates. 
-      
-      duplicates <- intersect(str.split$V1, str.split$V2)
-      
-     return(unique(
-        rbind(
-          duplex[which(str.split$V1 %in% duplicates),], 
-          duplex[which(str.split$V2 %in% duplicates),]
-            )
-          ))
+      stopifnot("Duplex dataframe missing the column read_id" = ("read_id" %in% colnames(duplex)))
+      str_split <- as.data.frame(do.call(rbind, strsplit(duplex$read_id, ";")))
+      return(
+        duplex[c(which(str_split$V1 %in% str_split$V2),which(str_split$V2 %in% str_split$V1)),]
+        )
       
     }
 }

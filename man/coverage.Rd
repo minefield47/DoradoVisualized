@@ -4,12 +4,14 @@
 \alias{coverage}
 \title{Subset __X coverage using Nanopore Reads}
 \usage{
-coverage(reads, genome_size_mb)
+coverage(reads, genome_size, units = "gb")
 }
 \arguments{
-\item{reads}{A dataframe or list of dataframes containing the column names: read_id and sequence_length_template.}
+\item{reads}{A vector or list of dataframes (for users with multiple libraries wishing to calculate the total coverage, the sequence lengths must be labelled "sequence_length_template").}
 
-\item{genome_size_mb}{Estimated genome size in megabases.}
+\item{genome_size}{Estimated genome size.}
+
+\item{units}{is the genome in bases, kilobases, megabases, or gigabases (default = "gb")}
 }
 \value{
 A vector of subset read_ids/indexes whose length is equal to the desired coverage of a given genome.

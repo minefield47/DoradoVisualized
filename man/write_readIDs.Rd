@@ -4,7 +4,7 @@
 \alias{write_readIDs}
 \title{Subset __X coverage using Nanopore Reads}
 \usage{
-write_readIDs(reads, file_name = NULL)
+write_readIDs(reads, file_name = "NULL")
 }
 \arguments{
 \item{reads}{A dataframe containing the read_ids you wish to export.}

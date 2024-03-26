@@ -1,14 +1,14 @@
-#' Mutate the duplex dataframe to include information about the simplex parents from the simplex dataframe. 
+#' Find information about the simplex reads from which a duplex read was created.
 #' @author Auden Block
 #' 
 #' @param duplex A dataframe of duplex reads
 #' @param simplex A dataframe of simplex reads from which the duplex reads were generated
-#' @param mutate (Default = True) Mutate an existing dataframe with the information, or return a new dataframe.
+#' @param mutate (Default = True) Mutate an existing dataframe to where the duplex parents are in the same row as the duplex read information, or return a dataframe only containing the simplex information. 
 #' @return Either the duplex dataframe with each duplex read now having the length and quality of its simplex parents (mutate = true) or a new dataframe of only the duplex parents. 
 #' 
 #' @examples 
 #' duplex.with.parents.df <- duplex_parents(duplex.df, simplex.df);
-#' summary.list$duplex <- duplex_parents(summary.list$duplex, summary.list$duplex);
+#' summary.list$duplex <- duplex_parents(summary.list$duplex, summary.list$simplex);
 #' duplex.parents.only.df <- duplex_parents(duplex.df, simplex.df, mutate = FALSE)
 #' @export
 duplex_parents <- function(duplex, simplex, mutate = TRUE) {
@@ -45,8 +45,6 @@ duplex_parents <- function(duplex, simplex, mutate = TRUE) {
     #   merge(duplex, ., by.x = "template_id", by.y= "read_id")
     
     
-    
-    
     #Change the name of the sequence_length_template column to be the template length
     names(duplex)[names(duplex) == 'sequence_length_template'] <- 'template_length'
     #Change the name of Q-Score. 
@@ -72,7 +70,7 @@ duplex_parents <- function(duplex, simplex, mutate = TRUE) {
     
     return(duplex)
   } else {
-  #if mutate ain't true...it false.
+  #if mutate ain't true...it false. We just want to 
     
     return(
       subset(simplex, (simplex$read_id %in% as.character(do.call(rbind, strsplit(duplex$read_id, ";")))))

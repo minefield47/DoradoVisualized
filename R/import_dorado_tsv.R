@@ -17,45 +17,20 @@
 #' summary.list <- import.dorado.tsv("/Users/user/Dorado/summary_directory");
 #' @export
 import_dorado_tsv <- function(file_or_directory)  {
-  
     if (dir.exists(file_or_directory)) { #Check if argument is a directory and that a DoradoQCduplex_<file_name> does not exist. If true, lump the directory and execute. 
-      all.reads <- do.call("rbind", lapply(list.files(path=file_or_directory, full.names = TRUE),read.delim, header = T, na.strings =c("","NA")))
-      
-      ifelse(is.na(all.reads$filename), 
-             #If filenames has NA values, this indicated duplex data, so we want to automatically return a list of the duplex and simplex data.   
-                   return(list(all.reads=all.reads,
-                        duplex=subset(all.reads, is.na(all.reads$filename)), #Subset of only duplex values since duplex do not have a filename value.
-                        all.simplex=subset(all.reads,!is.na(all.reads$filename))
-                   )))
-        
-     #The above piped for readability:
-     # list.files(path=file_or_directory, full.names = TRUE) %>%#List all summary files.
-     #  lapply(., read.delim, header = T, na.strings =c("","NA")) %>% #Read files into R as a list of dataframes.
-     #  dplyr::bind_rows() %>% #Merge the List into one mega dataframe.
-     #  list(all=., #Original Dataframe.
-     #       duplex=subset(., is.na(.$filename)), #Subset of only duplex values since duplex do not have a filename value.
-     #       simplex=subset(.,!is.na(.$filename))
-     #  ) %>%
-     #  return()
-     # 
-        
-    } else { #If it ain't a directory, it has to be a single file. 
-        all.reads <-read.delim(file_or_directory, header = T, na.strings =c("","NA"))
-        
-        ifelse(is.na(all.reads$filename), 
-               #If filename has NA values, this indicated duplex data, so we want to automatically return a list of the duplex and simplex data.   
-               return(list(all.reads=all.reads,
-                           duplex=subset(all.reads, is.na(all.reads$filename)), #Subset of only duplex values since duplex do not have a filename value.
-                           all.simplex=subset(all.reads,!is.na(all.reads$filename))
-               )))
-        
-      #Piped Version for readability:
-        # all.summary.list <- read.delim(file_or_directory , header=T, na.strings = c("","NA")) %>% #Read in the file as a dataframe.
-        #   list(all=., #Original dataframe. 
-        #        duplex = subset(., is.na(.$filename)), #Subset of only duplex values since duplex do not have a filename value.
-        #        simplex= subset(., !(is.na(.$filename)))
-        #   ) %>%
-        #   return()
-        # 
+      all_reads <- do.call("rbind", lapply(list.files(path=file_or_directory, full.names = TRUE),read.delim, header = T, na.strings =c("","NA")))
+    } else {
+      all_reads <-read.delim(file_or_directory, header = T, na.strings =c("","NA"))
     }
+  
+    if (any(is.na(all_reads$filename))) {
+     #If filenames has NA values, this indicated duplex data, so we want to automatically return a list of the duplex and simplex data.   
+       return(list(all_reads=all_reads,
+            duplex=subset(all_reads, is.na(all_reads$filename)), #Subset of only duplex values since duplex do not have a filename value.
+            all_simplex=subset(all_reads,!is.na(all_reads$filename))
+                  )
+            )
+      }  else {
+          return(all_reads)
+        }
 }  

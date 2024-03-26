@@ -2,7 +2,7 @@
 % Please edit documentation in R/duplex_parents.R
 \name{duplex_parents}
 \alias{duplex_parents}
-\title{Mutate the duplex dataframe to include information about the simplex parents from the simplex dataframe.}
+\title{Find information about the simplex reads from which a duplex read was created.}
 \usage{
 duplex_parents(duplex, simplex, mutate = TRUE)
 }
@@ -11,17 +11,17 @@ duplex_parents(duplex, simplex, mutate = TRUE)
 
 \item{simplex}{A dataframe of simplex reads from which the duplex reads were generated}
 
-\item{mutate}{(Default = True) Mutate an existing dataframe with the information, or return a new dataframe.}
+\item{mutate}{(Default = True) Mutate an existing dataframe to where the duplex parents are in the same row as the duplex read information, or return a dataframe only containing the simplex information.}
 }
 \value{
 Either the duplex dataframe with each duplex read now having the length and quality of its simplex parents (mutate = true) or a new dataframe of only the duplex parents.
 }
 \description{
-Mutate the duplex dataframe to include information about the simplex parents from the simplex dataframe.
+Find information about the simplex reads from which a duplex read was created.
 }
 \examples{
 duplex.with.parents.df <- duplex_parents(duplex.df, simplex.df);
-summary.list$duplex <- duplex_parents(summary.list$duplex, summary.list$duplex);
+summary.list$duplex <- duplex_parents(summary.list$duplex, summary.list$simplex);
 duplex.parents.only.df <- duplex_parents(duplex.df, simplex.df, mutate = FALSE)
 }
 \author{

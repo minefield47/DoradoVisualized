@@ -19,20 +19,21 @@ write_readIDs <- function(reads, file_name = "NULL") {
     
     if (file_name == "NULL") {
       #No filenames provided, lets create our own. 
-      
-      ifelse(is.null(names(reads)), 
-             #if the elements of reads are unset, use the run_id. 
-             file_name <- paste0("./", 
-                                 as.character(substitute(reads)), 
-                                 "/",
-                                 unlist(sapply(seq_along(reads), 
-                                               function(i) paste0(as.character(reads[[i]]$run_id[1]),"_readIDs.txt")))),
+      if (is.null(names(reads))) { 
+        #if the elements of reads are unset, use the run_id. 
+        file_name <- paste0("./", 
+                            as.character(substitute(reads)), 
+                            "/",
+                            unlist(sapply(seq_along(reads), 
+                                          function(i) paste0(as.character(reads[[i]]$run_id[1]),"_readIDs.txt"))))
+        } else {
              #Else, use the element names.
              file_name <- paste0("./", 
                                  as.character(substitute(reads)), 
                                  "/", 
                                  unlist(sapply(names(reads), 
-                                               function(i) paste0(i,"_readIDs.txt")))))
+                                               function(i) paste0(i,"_readIDs.txt"))))
+       }
     }
     #Error catching
     stopifnot("The length of file_name must be the same length as reads" = identical(length(reads), length(file_name)))

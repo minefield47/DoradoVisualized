@@ -9,7 +9,7 @@
 #' @examples 
 #' fastq <- read_fastq("<path_to_file>")
 #' @export
-read_fastq <- function(fastq){
+read_fastq <- function(fastq, TAGS = TRUE){
   #Parsing the fastq file in with R's read.csv but instead of commas it is new lines. 
   fastq <- read.csv(fastq, sep = "\n", header = FALSE)
   
@@ -22,8 +22,11 @@ read_fastq <- function(fastq){
     sequence = fastq[(seq_num+1),],
     quality = fastq[(seq_num+3),]
   )
- 
-  fastq.final["read.id"] <- gsub("@", "", sapply(strsplit(as.character(fastq.final$read.id.header), "\\s"), "[[", 1))
+  fastq.final["read_id"] <- gsub("@", "", sapply(strsplit(as.character(fastq.final$read.id.header), "\\s"), "[[", 1))
+  if (isTRUE(TAGS)){
+    
+  }
+  
 
 return(fastq.final)
 }
